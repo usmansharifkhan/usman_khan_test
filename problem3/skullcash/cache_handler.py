@@ -10,19 +10,23 @@ from .cache_dlinked_list import CacheList
 from .sync_cache import SyncCache
 from .common import *
 
-LOG = logging.getLogger()
-LOG.setLevel(logging.INFO)
 
 class CacheHandler:
 
     def __init__(self, cache_size, expiration_limit, distributed = False, remote_addresses = None):
+        '''
+        Class to handle all cache calls, heart of this library
+        :param cache_size: Cache Max Size
+        :param expiration_limit: Expiration Limit of Cache data
+        :param distributed: Distributed is True when accessed from DistributedCache otherwise False
+        :param remote_addresses: Address of Remote Cache Instances
+        '''
         self.cache_list = CacheList()
         self.cache_dict = {}
 
         self.cache_size = cache_size
         self.expiration_limit_value = expiration_limit
         self.distributed = distributed
-        self.neigbours = set()
         self.rd = None
 
         if distributed is True:
@@ -40,7 +44,6 @@ class CacheHandler:
             self.set(dict_value[DICT_KEY], dict_value[DICT_VALUE], dict_value[DICT_TIME], remote = True)
 
     async def handle(self, websocket, path):
-        self.neigbours.add(websocket)
         try:
             async for message in websocket:
                 try:
@@ -73,20 +76,14 @@ class CacheHandler:
                         responseMsg = {}
                         responseMsg[COMMAND] = 'ping'
                         await websocket.send(json.dumps(responseMsg))
-                        # await websocket.send(
-                        #     self.encoder.encode_error_general(
-                        #         **format_custom_error('no command found')))
 
                 except Exception as e:
                     LOG.error(e)
                     # await self.send_error(websocket)
                     continue
         except Exception:
-            # self.executor.unsubscribe(websocket)
             LOG.error('client disconnected, removed as subscriber: ' + str(
                 websocket.remote_address))
-        finally:
-            self.neigbours.remove(websocket)
 
     async def send_recovery_data_back(self, websocket):
         list_iter = self.cache_list.iterate_over_all_nodes()
@@ -111,13 +108,13 @@ class CacheHandler:
         print(expired_keys)
         for exp_key in expired_keys:
             del self.cache_dict[exp_key]
-            logging.debug("Cache entry removed for key {} due to expiration".format(exp_key))
+            logging.debug('Cache entry removed for key {} due to expiration'.format(exp_key))
 
     def get(self, key, remote = False):
+        ''''
+        Get the value associated with key
         '''
-        :param key:
-        :return: value stored
-        '''
+        LOG.info('Retrieving value for key {}'.format(key))
         if key in self.cache_dict:
             current_time = time.time()
             dict_value = self.cache_dict.get(key)
@@ -146,12 +143,10 @@ class CacheHandler:
 
     def set(self, key, value, timestamp_value = time.time(), remote = False):
         '''
-        :param key:
-        :param value:
-        :return:
+        Sey the value for key
         '''
         try:
-            print("Storing {} key with value {}".format(key,value))
+            LOG.info("Storing {} key with value {}".format(key,value))
             if key in self.cache_dict:
                 value_dict = self.cache_dict.get(key)
                 removable_node = value_dict.get(DICT_NODE)
@@ -169,10 +164,8 @@ class CacheHandler:
             self.cache_dict[key] = dictionary_construct
 
             if self.distributed is True and remote is False:
-                print('inside if block')
                 return self.sync_cache.synchronize(key, value, timestamp_value)
         except Exception as e:
-            print(e)
             LOG.debug('Set operation for {} key failed'.format(key))
             return False
         return True

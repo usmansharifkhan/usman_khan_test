@@ -35,9 +35,8 @@ There are three folders representing the solutions of three problems:
       commit.
 
 
-
 '''Tests'''
-Run the tests through ----> python -m pytest
+make test
 
 __
 Things to do -->
@@ -46,13 +45,9 @@ Things to do -->
 -> Distributed cache tests 
 -> Geo-locality reference
 -> Simplify code
--> Encoder class
 -> wss (secure)
--> Common playground to run all tests from - python -m pytest
--> Dockerfile example
 -> Complete documentation and comments
 -> Extended readmes
--> Initial Commit
 -> Add log messages
 -> Exception handling and seperate classes
 

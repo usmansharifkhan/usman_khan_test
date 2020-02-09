@@ -1,6 +1,6 @@
 
 import time
-from skullcash.simple_cache import SimpleCache
+from ..skullcash.simple_cache import SimpleCache
 
 
 def test_check_set_get_cache():
@@ -17,7 +17,6 @@ def test_check_set_get_cache_lru():
         assert simple_cache.get('key' + str(key_num)) == None
     for key_num in range(101, 200):
         assert simple_cache.get('key' + str(key_num)) == 'value' + str(key_num)
-    print("Successfully Done")
 
 def test_check_set_get_cache_expiration():
     simple_cache = SimpleCache(expiration_limit=1)
@@ -27,7 +26,6 @@ def test_check_set_get_cache_expiration():
     for key_num in range(100):
         # print(simple_cache.get('key' + str(key_num)))
         assert simple_cache.get('key' + str(key_num)) == None
-    print("Successfully Done")
 
 
 if __name__ == '__main__':

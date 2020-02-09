@@ -1,7 +1,9 @@
-
+'''
+This python file is just a playground for initial testing
+'''
 import asyncio
 
-from skullcash.distributed_cache import DistributedCache
+from .skullcash.distributed_cache import DistributedCache
 
 
 async def set_values():
@@ -26,7 +28,6 @@ if __name__ == '__main__':
 
     stop = asyncio.Future()
     asyncio.ensure_future(get_values())
-    # event_loop.add_signal_handler(signal.SIGTERM, stop.set_result, None)
     event_loop.run_until_complete(stop)
 
     ws_server = cache.get_ws_server()

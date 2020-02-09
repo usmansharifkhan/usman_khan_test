@@ -22,7 +22,6 @@ class DistributedCache:
 
     def __init__(self, event_loop = None, cache_size = MAX_CACHE_SIZE, expiration_limit = EXPIRATION_EPOCH_MAX_TIME,
                  server_host = CACHE_SERVER_HOST, server_port = CACHE_SERVER_PORT, remote_addresses = REMOTE_SERVER_ADDRESSES):
-        LOG.info('DISTRIBUTED CACHE')
         if event_loop == None:
             raise Exception("Event loop is invalid, distributed cache depends on Async event loop")
 

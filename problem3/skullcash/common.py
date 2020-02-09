@@ -5,6 +5,7 @@ import logging
 import os
 
 LOG = logging.getLogger()
+LOG.setLevel(logging.INFO)
 
 COMMAND = 'command'
 SYNCH_COMMAND = 'synchronize'

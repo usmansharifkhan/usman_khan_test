@@ -7,6 +7,9 @@ class CacheList(object):
     __slots__ = ('_first', '_last', '_size')
 
     def __init__(self, sequence=None):
+        '''
+        Doubly Linked list containing the sequence of cache
+        '''
         self._first = None
         self._last = None
         self._size = 0
@@ -112,6 +115,9 @@ class CacheList(object):
         return expired_keys
 
     def iterate_over_all_nodes(self):
+        '''
+        Returns an iterator of all nodes
+        '''
         if self._first is not None:
             return self._first.iternext()
         else:
