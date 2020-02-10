@@ -2,7 +2,7 @@
 import asyncio
 import signal
 
-from .skullcash.distributed_cache import DistributedCache
+from skullcash.distributed_cache import DistributedCache
 
 if __name__ == '__main__':
     event_loop = asyncio.new_event_loop()

@@ -38,3 +38,9 @@ def configure_logging():
   output_handler.setFormatter(logging.Formatter(
       "%(asctime)s — %(name)s — %(levelname)s — %(funcName)s:%(lineno)d — %(message)s"))
   LOG.addHandler(output_handler)
+
+class SkullCashException(Exception):
+  """
+  Exception throw by SkullCash Methode
+  """
+  pass

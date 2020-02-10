@@ -10,11 +10,8 @@ class SyncCache:
 
     def __init__(self, remote_server_address, cache_handler):
 
-        self._count = 0
         self._neighbour_addresses = SyncCache._get_list_of_remote_address(remote_server_address)
         self._neighbours = []
-        self._expiration_set = set()
-        self._sync_set = set()
         for neighbour in self._neighbour_addresses:
             asyncio.ensure_future(self._connect_exception(neighbour))
         self._cache_handler = cache_handler
@@ -36,22 +33,14 @@ class SyncCache:
             await asyncio.sleep(10)
             await self._connect_exception(neighbour)
 
-    def expiration_done_callback(self, task):
-        self._expiration_set.remove(task)
-
     async def send_expiration_msg(self, msg):
         for neighbour in self._neighbours:
             task = asyncio.ensure_future(neighbour.send(msg))
-            self._expiration_set.add(task)
-            task.add_done_callback(self.expiration_done_callback(task))
 
     async def synch_expiration(self, key):
         msg = Encoder.build_expiration_synch_msg(key)
         await self.send_expiration_msg(msg)
 
-    async def expiration_wait(self):
-        if self._expiration_set:
-            await asyncio.wait(self._expiration_set)
 
     async def reload(self):
         await asyncio.sleep(2)
@@ -65,7 +54,6 @@ class SyncCache:
             break
         received_msg = await neighbour.recv()
         self._retrieve_apply_reload_data(received_msg)
-
 
     def _retrieve_apply_reload_data(self, received_msg):
         msg_dict = json.loads(received_msg)
@@ -81,9 +69,6 @@ class SyncCache:
     def synchronize(self, key, value, time):
         msg = Encoder.build_synch_msg(key, value, time)
         asyncio.ensure_future(self.send_sync_msg(msg))
-
-    def sync_done_callback(self, task):
-        self._sync_set.remove(task)
 
     async def get_synch(self, key):
         msg = Encoder.build_get_synch_msg(key)

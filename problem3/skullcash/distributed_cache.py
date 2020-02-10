@@ -33,11 +33,11 @@ class DistributedCache:
             'port': server_port
         }
         ws = websockets.serve(**server_args)
-        self.server = asyncio.ensure_future(ws)
+        self.task = asyncio.ensure_future(ws)
         asyncio.ensure_future(self.cache_handler.reload_values())
 
     def get_ws_server(self):
-        return self.server
+        return self.task
 
     def get(self, key):
         '''

@@ -1,8 +1,6 @@
 '''
 Cache Handler Service class object holding all of the data
 '''
-import websockets
-import logging
 import time
 import json
 import asyncio
@@ -69,17 +67,10 @@ class CacheHandler:
                             async with self.lock:
                                 await self.send_recovery_data_back(websocket)
                             continue
-                        else:
-                            print("wrong message")
 
-                    else:
-                        responseMsg = {}
-                        responseMsg[COMMAND] = 'ping'
-                        await websocket.send(json.dumps(responseMsg))
 
                 except Exception as e:
                     LOG.error(e)
-                    # await self.send_error(websocket)
                     continue
         except Exception:
             LOG.error('client disconnected, removed as subscriber: ' + str(
@@ -105,10 +96,9 @@ class CacheHandler:
 
     def clear_expired_keys(self, key_node):
         expired_keys = self.cache_list.pop_expired_nodes(key_node)
-        print(expired_keys)
         for exp_key in expired_keys:
             del self.cache_dict[exp_key]
-            logging.debug('Cache entry removed for key {} due to expiration'.format(exp_key))
+            logging.info('Cache entry removed for key {} due to expiration'.format(exp_key))
 
     def get(self, key, remote = False):
         ''''
@@ -134,7 +124,6 @@ class CacheHandler:
                 self.clear_expired_keys(dict_value[DICT_NODE])
                 if self.distributed is True and remote is False:
                     self.sync_cache.synch_expiration(key)
-                    self.sync_cache.expiration_wait()
                 logging.warning("Cache entry for key {} expired".format(key))
                 return None
         else:

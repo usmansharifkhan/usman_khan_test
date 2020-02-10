@@ -5,4 +5,8 @@ ADD skullcash skullcash
 
 ADD entrypoint.py .
 
-ENTRYPOINT['python', 'entrypoint.py']
+ADD requirements.txt .
+
+RUN pip install -r requirements.txt
+
+ENTRYPOINT ['python', 'entrypoint.py']
