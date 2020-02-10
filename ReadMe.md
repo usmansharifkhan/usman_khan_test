@@ -2,28 +2,28 @@
 
 There are three folders presenting the solutions of the following three problems:
 
-1. Problem 1:
+**1. Problem 1: Overlap finder**
 - Wrote a program that accepts two lines as tuple arguments. Returns a boolean true on overlap. Test has been provided
 
-2. Problem 2:
+**2. Problem 2: Two version string comparator**
 - Wrote a python object class that accepts 2 version string as a constructor arg and has a comparable function to 
   compare with same class object.
 
-3. Problem 3:
+**3. Problem 3: Scalable LRU Cache**
 - This was my favourite, started off with exploring different ways to store cache data. For retrieving data it 
-  had to be stored in dictionary(python data-structure) with constant time retrieval, lets call it key-store. 
-  But then how would you add least recently used feature to the program? That's where I started admiring 
+  had to be stored in a dictionary(python data-structure) with constant time retrieval- let's call it key-store. 
+  But then how would you add 'least recently used' feature to the program? That's where I started admiring 
   doubly linked list(DLL) for its O(1) additions and deletions. I had a look around at the existing doubly linked 
   list libraries out there such as pyllist, but it only provided the function to delete indexed node(for that 
-  I had to remember the index) and the list length can change. So I ended writing a class for it *CacheList* in 
+  I had to remember the index) and the list length can change. So I ended up writing a class for it *CacheList* in 
   cache_dlinked_list.py. Added functions for this use-case including the generic pop_from_tail, add_to_head and 
   specifically deleting a node using the node as an arg itself. We will call this DDL key-list 
 - The key is stored in key-list whereas for the same key another dictionary is stored in key-store. This dictionary 
   would include the value, timestamp(when the value was accessed) and the node itself(reference in the world of objects).
-- Two implementation of caches are presented in SimpleCache and DistributedCache. SimpleCache is a single instance 
-  running of cache.
-- Distributed cache is based on asyncio and uses websockets to connect to other neighbour instances. This mini-project enabled
-  me to put my asyncio theoretical knowledge into practise(plenty of aspects to improve on). 
+- Two implementations of caches are presented in SimpleCache and DistributedCache. SimpleCache is a single instance of
+  cache.
+- Distributed cache is based on asyncio and uses websockets to connect to other neighbour instances. This mini-project
+  enabled me to put my asyncio theoretical knowledge into practise(plenty of aspects to improve on). 
   - Upon every set operation, the value is set in other instances to present real time replication. 
   - Upon every get request, a synch get is executed in other instances to have consistent LRU data. 
   - Upon encountering expired data, a synch expiration call is executed on other instances to clear space.
@@ -62,9 +62,9 @@ There are three folders presenting the solutions of the following three problems
   
   
 6. **Geo-Distributed access**
- - If we're on cloud (we have to be on cloud for scalable distributed fault-tolerant systems) we can use something like
+ - If one is on cloud (we have to be on cloud for scalable distributed fault-tolerant systems) one can use something like
    AWS route-53 which provides with Geolocation routing. Something like this would enable us to choose between the resources 
-   that serve our traffic based on the geographic location of users accessing the data using the DNS entry for our service.
+   that serve our traffic based on the geographic location of users accessing the data using the DNS entry added for service.
 
 
 
@@ -77,5 +77,6 @@ Makefile is provided.
 **Things I still intend to do**
 - wss (secure)
 - write some more unittests and integration test (there has to be bugs)
+- some corner cases needs covering
 
   
